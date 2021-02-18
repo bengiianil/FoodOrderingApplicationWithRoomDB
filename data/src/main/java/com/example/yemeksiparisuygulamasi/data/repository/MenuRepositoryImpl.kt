@@ -1,5 +1,6 @@
 package com.example.yemeksiparisuygulamasi.data.repository
 
+import android.content.Context
 import com.example.yemeksiparisuygulamasi.data.datasource.MenuRemoteDataSource
 import com.example.yemeksiparisuygulamasi.domain.entity.Food
 import com.example.yemeksiparisuygulamasi.domain.entity.ResultData
@@ -11,11 +12,11 @@ import javax.inject.Inject
 
 class MenuRepositoryImpl @Inject constructor(private val dataSource: MenuRemoteDataSource) :
     MenuRepository {
-    override fun getAllFood(): Flow<ResultData<List<Food>>> = flow {
+    override fun getAllFood(context: Context): Flow<ResultData<List<Food>>> = flow {
         emit(ResultData.Loading())
-        val commentsList = dataSource.getAllFoods()
+        val commentsList = dataSource.getAllFoods(context)
         commentsList.collect {
-            if (it.isNotEmpty()){
+            if (it != null){
                 emit(ResultData.Success(it))
             }
             else{
