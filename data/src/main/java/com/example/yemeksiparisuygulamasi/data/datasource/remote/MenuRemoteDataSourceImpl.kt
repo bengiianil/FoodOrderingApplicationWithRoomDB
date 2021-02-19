@@ -1,14 +1,12 @@
 package com.example.yemeksiparisuygulamasi.data.datasource.remote
 
 import android.content.Context
-import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.yemeksiparisuygulamasi.data.datasource.MenuRemoteDataSource
 import com.example.yemeksiparisuygulamasi.domain.entity.Food
-import com.example.yemeksiparisuygulamasi.domain.entity.ResultData
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -22,26 +20,25 @@ class MenuRemoteDataSourceImpl @Inject constructor() :
     @FlowPreview
     override suspend fun getAllFoods(context: Context): Flow<List<Food>?> {
         return flowViaChannel { flowChannel ->
-            var foodList : ArrayList<Food> = arrayListOf()
+            val foodList : ArrayList<Food> = arrayListOf()
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/tum_yemekler.php"
 
             val requestToUrl = StringRequest(Request.Method.GET, webServiceUrl, { responseOfUrl ->
 
                 try{
                     val jsonObj = JSONObject(responseOfUrl)
-                    val yemekler = jsonObj.getJSONArray("yemekler")
+                    val foods = jsonObj.getJSONArray("yemekler")
 
-                    for(index in 0 until yemekler.length()){
+                    for(index in 0 until foods.length()){
+                        val foodData = foods.getJSONObject(index)
 
-                        val y = yemekler.getJSONObject(index)
+                        val yemek_id = foodData.getInt("yemek_id")
+                        val yemek_adi = foodData.getString("yemek_adi")
+                        val yemek_resim_adi = foodData.getString("yemek_resim_adi")
+                        val yemek_fiyat = foodData.getInt("yemek_fiyat")
 
-                        val yemek_id = y.getInt("yemek_id")
-                        val yemek_adi = y.getString("yemek_adi")
-                        val yemek_resim_adi = y.getString("yemek_resim_adi")
-                        val yemek_fiyat = y.getInt("yemek_fiyat")
-
-                        val yemek = Food(yemek_id, yemek_adi, yemek_resim_adi, yemek_fiyat)
-                        foodList.add(yemek)
+                        val food = Food(yemek_id, yemek_adi, yemek_resim_adi, yemek_fiyat)
+                        foodList.add(food)
                     }
                     flowChannel.sendBlocking(foodList)
                 }
@@ -53,6 +50,49 @@ class MenuRemoteDataSourceImpl @Inject constructor() :
                 flowChannel.sendBlocking(null)
             })
 
+            Volley.newRequestQueue(context).add(requestToUrl)
+        }
+    }
+    override suspend fun searchFood(context: Context, keyWord: String): Flow<List<Food>?> {
+        return flowViaChannel { flowChannel ->
+            val foodList: ArrayList<Food> = arrayListOf()
+            val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/tum_yemekler_arama.php"
+
+            val requestToUrl = object : StringRequest(
+                Request.Method.POST,
+                webServiceUrl,
+                Response.Listener { responseOfUrl ->
+                    foodList.clear()
+                    try {
+                        val jsonObj = JSONObject(responseOfUrl)
+                        val foodsData = jsonObj.getJSONArray("yemekler")
+
+                        for (index in 0 until foodsData.length()) {
+                            val foods = foodsData.getJSONObject(index)
+                            val yemek_id = foods.getInt("yemek_id")
+                            val yemek_adi = foods.getString("yemek_adi")
+                            val yemek_resim_adi = foods.getString("yemek_resim_adi")
+                            val yemek_fiyat = foods.getInt("yemek_fiyat")
+
+                            val yemek = Food(yemek_id, yemek_adi, yemek_resim_adi, yemek_fiyat)
+
+                            foodList.add(yemek)
+                        }
+                        flowChannel.sendBlocking(foodList)
+                    } catch (e: JSONException) {
+                        flowChannel.sendBlocking(null)
+                    }
+
+                },
+                Response.ErrorListener {
+                    flowChannel.sendBlocking(null)
+                }) {
+                override fun getParams(): MutableMap<String, String> {
+                    val parameter = HashMap<String, String>()
+                    parameter["yemek_adi"] = keyWord
+                    return parameter
+                }
+            }
             Volley.newRequestQueue(context).add(requestToUrl)
         }
     }

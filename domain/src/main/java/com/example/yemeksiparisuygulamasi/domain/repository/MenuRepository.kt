@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MenuRepository {
     fun getAllFood(context: Context): Flow<ResultData<List<Food>>>
+    fun searchFood(context: Context, keyWord: String): Flow<ResultData<List<Food>>>
 }

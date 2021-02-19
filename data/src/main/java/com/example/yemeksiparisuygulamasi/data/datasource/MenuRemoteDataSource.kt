@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface MenuRemoteDataSource {
     suspend fun getAllFoods(context: Context): Flow<List<Food>?>
+    suspend fun searchFood(context: Context, keyWord: String): Flow<List<Food>?>
 }
