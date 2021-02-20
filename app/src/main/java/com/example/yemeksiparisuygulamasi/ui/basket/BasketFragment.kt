@@ -2,6 +2,7 @@ package com.example.yemeksiparisuygulamasi.ui.basket
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isGone
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -51,9 +52,12 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
                                     viewModel.deleteFoodsFromBasket(this@BasketFragment.requireContext(),foodFromBasket)
                                 }
                             })
+                    binding.basketRecyclerView.visibility = View.VISIBLE
+                    binding.noProductInBasketText.visibility = View.GONE
                 }
                 is ResultData.Failed -> {
-                    println(it.error)
+                    binding.basketRecyclerView.visibility = View.GONE
+                    binding.noProductInBasketText.visibility = View.VISIBLE
                 }
                 is ResultData.Loading -> {
 
@@ -64,7 +68,7 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
         viewModel.removedFoodToBasket.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ResultData.Success -> {
-                    viewModel.getFoodsFromBasket(this.requireContext())
+                   viewModel.getFoodsFromBasket(this.requireContext())
                 }
                 is ResultData.Failed -> {
                     println(it.error)
