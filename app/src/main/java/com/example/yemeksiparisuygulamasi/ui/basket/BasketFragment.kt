@@ -2,79 +2,60 @@ package com.example.yemeksiparisuygulamasi.ui.basket
 
 import android.os.Bundle
 import android.view.View
-import androidx.core.view.isGone
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.yemeksiparisuygulamasi.R
 import com.example.yemeksiparisuygulamasi.databinding.FragmentBasketBinding
-import com.example.yemeksiparisuygulamasi.domain.entity.Basket
-import com.example.yemeksiparisuygulamasi.domain.entity.Food
-import com.example.yemeksiparisuygulamasi.domain.entity.ResultData
+import com.example.yemeksiparisuygulamasi.model.Basket
+import com.example.yemeksiparisuygulamasi.model.ResultData
 import com.example.yemeksiparisuygulamasi.ui.basket.adapter.BasketAdapter
 import com.example.yemeksiparisuygulamasi.ui.common.BaseFragment
-import com.example.yemeksiparisuygulamasi.ui.menu.adapter.MenuAdapter
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
+class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>() {
 
     override val layoutRes: Int = R.layout.fragment_basket
-    override val viewModel: BasketViewModel by viewModels()
+    override lateinit var viewModel: BasketViewModel
 
     override fun observeViewModel() {
-        viewModel.addedFoodToBasket.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is ResultData.Success -> {
-                    // Todo : Ekrana ekleme başarılı oldu toastı çıksın
-                }
-                is ResultData.Failed -> {
-                    // Todo : Ekrana ekleme başarısız oldu toastı çıksın
-                }
-                is ResultData.Loading -> {
-
-                }
-            }
-        })
-
-
         viewModel.foodsListFromBasket.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is ResultData.Success -> {
-                    var sumPrice = 0
-                    binding.basketRecyclerView.setHasFixedSize(true)
-                    binding.basketRecyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
-                    binding.basketRecyclerView.adapter =
-                        BasketAdapter(
-                            this.requireContext(),
-                            it.toData() as ArrayList<Basket>,
-                            object : BasketAdapter.BasketItemClickListener {
-                                override fun delete(foodFromBasket: Basket) {
-                                    viewModel.deleteFoodsFromBasket(this@BasketFragment.requireContext(),foodFromBasket)
-                                }
-                            })
-                    binding.basketRecyclerView.visibility = View.VISIBLE
-                    binding.noProductInBasketText.visibility = View.GONE
+            if(it != null) {
+                var sumPrice = 0
+                binding.noProductInBasketText.visibility = View.INVISIBLE
+                binding.basketRecyclerView.visibility = View.VISIBLE
+                binding.basketRecyclerView.setHasFixedSize(true)
+                binding.basketRecyclerView.layoutManager =
+                    StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
+                binding.basketRecyclerView.adapter =
+                    BasketAdapter(
+                        this.requireContext(),
+                        it as ArrayList<Basket>,
+                        object : BasketAdapter.BasketItemClickListener {
+                            override fun delete(foodFromBasket: Basket) {
+                                viewModel.deleteFoodsFromBasket(
+                                    this@BasketFragment.requireContext(),
+                                    foodFromBasket
+                                )
+                            }
+                        })
+                binding.basketRecyclerView.visibility = View.VISIBLE
+                binding.noProductInBasketText.visibility = View.GONE
 
-                    it.data?.forEach {
-                        sumPrice += (it.food.price * it.orderQuantity)
-                    }
-                    binding.sumBasketPriceText.text = sumPrice.toString()
+                it.forEach {
+                    sumPrice += (it.food.price * it.orderQuantity)
                 }
-                is ResultData.Failed -> {
-                    binding.basketRecyclerView.visibility = View.GONE
-                    binding.noProductInBasketText.visibility = View.VISIBLE
-                }
-                is ResultData.Loading -> {
-
-                }
+                binding.sumBasketPriceText.text = sumPrice.toString()
+            }
+            else{
+                binding.noProductInBasketText.visibility = View.VISIBLE
+                binding.basketRecyclerView.visibility = View.INVISIBLE
             }
         })
 
         viewModel.removedFoodToBasket.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ResultData.Success -> {
-                   viewModel.getFoodsFromBasket(this.requireContext())
+                    viewModel.getFoodsFromBasket(this.requireContext())
                 }
                 is ResultData.Failed -> {
 
@@ -87,6 +68,7 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
     }
 
     override fun viewCreated(view: View, savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(this).get(BasketViewModel::class.java)
         viewModel.getFoodsFromBasket(this.requireContext())
     }
 }

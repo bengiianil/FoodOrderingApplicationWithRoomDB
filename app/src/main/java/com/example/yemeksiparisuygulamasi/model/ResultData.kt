@@ -1,4 +1,4 @@
-package com.example.yemeksiparisuygulamasi.domain.entity
+package com.example.yemeksiparisuygulamasi.model
 
 
 sealed class ResultData<out T> {

@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yemeksiparisuygulamasi.R
-import com.example.yemeksiparisuygulamasi.domain.entity.Food
+import com.example.yemeksiparisuygulamasi.model.Food
 import com.squareup.picasso.Picasso
 
 class MenuAdapter(private var myContext:Context, private var foodList:ArrayList<Food>, private val listenerMenu: MenuItemClickListener)

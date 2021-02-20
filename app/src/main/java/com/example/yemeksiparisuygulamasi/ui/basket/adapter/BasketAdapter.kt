@@ -10,8 +10,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.yemeksiparisuygulamasi.R
-import com.example.yemeksiparisuygulamasi.domain.entity.Basket
-import com.example.yemeksiparisuygulamasi.domain.entity.Food
+import com.example.yemeksiparisuygulamasi.model.Basket
 import com.squareup.picasso.Picasso
 
 class BasketAdapter(private var myContext:Context, private var foodList:ArrayList<Basket>, private val basketListener: BasketItemClickListener)

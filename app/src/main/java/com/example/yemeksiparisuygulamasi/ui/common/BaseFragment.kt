@@ -15,7 +15,7 @@ import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.observe
 import com.example.yemeksiparisuygulamasi.R
-import com.example.yemeksiparisuygulamasi.domain.entity.ResultData
+import com.example.yemeksiparisuygulamasi.model.ResultData
 
 abstract class BaseFragment<T : BaseViewModel, B : ViewDataBinding> : Fragment() {
     abstract val layoutRes: Int

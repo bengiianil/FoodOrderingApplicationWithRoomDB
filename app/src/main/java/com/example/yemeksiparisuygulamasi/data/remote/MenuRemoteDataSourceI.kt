@@ -1,24 +1,22 @@
-package com.example.yemeksiparisuygulamasi.data.datasource.remote
+package com.example.yemeksiparisuygulamasi.data.remote
 
 import android.content.Context
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.yemeksiparisuygulamasi.data.datasource.MenuRemoteDataSource
-import com.example.yemeksiparisuygulamasi.domain.entity.Food
+import com.example.yemeksiparisuygulamasi.model.Food
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowViaChannel
 import org.json.JSONException
 import org.json.JSONObject
-import javax.inject.Inject
 
-class MenuRemoteDataSourceImpl @Inject constructor() :
-    MenuRemoteDataSource {
+class MenuRemoteDataSourceI
+     {
     @FlowPreview
-    override suspend fun getAllFoods(context: Context): Flow<List<Food>?> {
+    suspend fun getAllFoods(context: Context): Flow<List<Food>?> {
         return flowViaChannel { flowChannel ->
             val foodList : ArrayList<Food> = arrayListOf()
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/tum_yemekler.php"
@@ -53,7 +51,7 @@ class MenuRemoteDataSourceImpl @Inject constructor() :
             Volley.newRequestQueue(context).add(requestToUrl)
         }
     }
-    override suspend fun searchFood(context: Context, keyWord: String): Flow<List<Food>?> {
+         suspend fun searchFood(context: Context, keyWord: String): Flow<List<Food>?> {
         return flowViaChannel { flowChannel ->
             val foodList: ArrayList<Food> = arrayListOf()
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/tum_yemekler_arama.php"

@@ -1,65 +1,38 @@
 package com.example.yemeksiparisuygulamasi.ui.basket
 
 import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.yemeksiparisuygulamasi.domain.entity.Basket
-import com.example.yemeksiparisuygulamasi.domain.entity.Food
-import com.example.yemeksiparisuygulamasi.domain.entity.ResultData
-import com.example.yemeksiparisuygulamasi.domain.usecase.AddFoodToBasketUseCase
-import com.example.yemeksiparisuygulamasi.domain.usecase.GetAllFoodsUseCase
-import com.example.yemeksiparisuygulamasi.domain.usecase.GetFoodsFromBasketUseCase
-import com.example.yemeksiparisuygulamasi.domain.usecase.RemoveFoodFromBasketUseCase
+import com.example.yemeksiparisuygulamasi.data.remote.BasketRemoteDataSourceImpl
+import com.example.yemeksiparisuygulamasi.model.Basket
+import com.example.yemeksiparisuygulamasi.model.ResultData
 import com.example.yemeksiparisuygulamasi.ui.common.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class BasketViewModel @ViewModelInject constructor(
-    private val getFoodsFromBasketUseCase: GetFoodsFromBasketUseCase,
-    private val addFoodToBasketUseCase: AddFoodToBasketUseCase,
-    private val removeFoodFromBasketUseCase: RemoveFoodFromBasketUseCase
-) : BaseViewModel() {
-
-    private val _addedFoodToBasket = MutableLiveData<ResultData<Unit>>()
-    val addedFoodToBasket: MutableLiveData<ResultData<Unit>>
-        get() = _addedFoodToBasket
-
+class BasketViewModel : BaseViewModel() {
     private val _removedFoodToBasket = MutableLiveData<ResultData<Unit>>()
     val removedFoodToBasket: MutableLiveData<ResultData<Unit>>
         get() = _removedFoodToBasket
 
-    private val _foodsListFromBasket = MutableLiveData<ResultData<List<Basket>>>()
-    val foodsListFromBasket: MutableLiveData<ResultData<List<Basket>>>
+    private val _foodsListFromBasket = MutableLiveData<List<Basket>>()
+    val foodsListFromBasket: MutableLiveData<List<Basket>>
         get() = _foodsListFromBasket
 
     fun getFoodsFromBasket(context:Context){
         viewModelScope.launch(Dispatchers.IO) {
-            getFoodsFromBasketUseCase.invoke(context).collect { it ->
-                handleTask(it) {
-                    foodsListFromBasket.postValue(it)
-                }
-            }
-        }
-    }
-
-    fun addFoodsToBasket(context:Context, food: Food, counter: Int){
-        viewModelScope.launch(Dispatchers.IO) {
-            addFoodToBasketUseCase.invoke(context, food, counter).collect { it ->
-                handleTask(it) {
-                    addedFoodToBasket.postValue(it)
-                }
+            BasketRemoteDataSourceImpl().getBasket(context).collect {
+                _foodsListFromBasket.postValue(it)
             }
         }
     }
 
     fun deleteFoodsFromBasket(context:Context, foodFromBasket: Basket){
         viewModelScope.launch(Dispatchers.IO) {
-            removeFoodFromBasketUseCase.invoke(context,foodFromBasket).collect { it ->
+            BasketRemoteDataSourceImpl().removeBasket(context,foodFromBasket).collect {
                 handleTask(it) {
-                    removedFoodToBasket.postValue(it)
+                    _removedFoodToBasket.postValue(it)
                 }
             }
         }

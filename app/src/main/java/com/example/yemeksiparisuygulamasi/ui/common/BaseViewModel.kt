@@ -2,7 +2,7 @@ package com.example.yemeksiparisuygulamasi.ui.common
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.yemeksiparisuygulamasi.domain.entity.ResultData
+import com.example.yemeksiparisuygulamasi.model.ResultData
 
 open class BaseViewModel : ViewModel() {
 

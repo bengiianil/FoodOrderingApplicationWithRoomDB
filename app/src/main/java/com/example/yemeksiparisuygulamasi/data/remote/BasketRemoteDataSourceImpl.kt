@@ -1,28 +1,21 @@
-package com.example.yemeksiparisuygulamasi.data.datasource.remote
+package com.example.yemeksiparisuygulamasi.data.remote
 
 import android.content.Context
-import android.util.Log
-import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.yemeksiparisuygulamasi.data.datasource.BasketRemoteDataSource
-import com.example.yemeksiparisuygulamasi.data.datasource.MenuRemoteDataSource
-import com.example.yemeksiparisuygulamasi.domain.entity.Basket
-import com.example.yemeksiparisuygulamasi.domain.entity.Food
-import com.example.yemeksiparisuygulamasi.domain.entity.ResultData
-import kotlinx.coroutines.FlowPreview
+import com.example.yemeksiparisuygulamasi.model.Basket
+import com.example.yemeksiparisuygulamasi.model.Food
+import com.example.yemeksiparisuygulamasi.model.ResultData
 import kotlinx.coroutines.channels.sendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowViaChannel
 import org.json.JSONException
 import org.json.JSONObject
-import javax.inject.Inject
 
-class BasketRemoteDataSourceImpl @Inject constructor() :
-    BasketRemoteDataSource {
-    override suspend fun addBasket(context: Context, food: Food, counter: Int): Flow<ResultData<Unit>> {
+class BasketRemoteDataSourceImpl {
+    suspend fun addBasket(context: Context, food: Food, counter: Int): Flow<ResultData<Unit>> {
         return flowViaChannel { flowChannel ->
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/insert_sepet_yemek.php"
 
@@ -48,7 +41,7 @@ class BasketRemoteDataSourceImpl @Inject constructor() :
         }
     }
 
-    override suspend fun removeBasket(context: Context, foodFromBasket: Basket): Flow<ResultData<Unit>> {
+    suspend fun removeBasket(context: Context, foodFromBasket: Basket): Flow<ResultData<Unit>> {
         return flowViaChannel { flowChannel ->
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/delete_sepet_yemek.php"
 
@@ -75,7 +68,7 @@ class BasketRemoteDataSourceImpl @Inject constructor() :
         }
     }
 
-    override suspend fun getBasket(context: Context): Flow<List<Basket>?> {
+    suspend fun getBasket(context: Context): Flow<List<Basket>?> {
         return flowViaChannel { flowChannel ->
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/tum_sepet_yemekler.php"
 
