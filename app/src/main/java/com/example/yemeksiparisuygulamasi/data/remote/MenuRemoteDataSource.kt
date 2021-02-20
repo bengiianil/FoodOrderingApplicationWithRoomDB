@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.flowViaChannel
 import org.json.JSONException
 import org.json.JSONObject
 
-class MenuRemoteDataSourceI
+class MenuRemoteDataSource
      {
     @FlowPreview
     suspend fun getAllFoods(context: Context): Flow<List<Food>?> {

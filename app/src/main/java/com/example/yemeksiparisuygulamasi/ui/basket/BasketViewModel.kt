@@ -3,7 +3,7 @@ package com.example.yemeksiparisuygulamasi.ui.basket
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.yemeksiparisuygulamasi.data.remote.BasketRemoteDataSourceImpl
+import com.example.yemeksiparisuygulamasi.data.remote.BasketRemoteDataSource
 import com.example.yemeksiparisuygulamasi.model.Basket
 import com.example.yemeksiparisuygulamasi.model.ResultData
 import com.example.yemeksiparisuygulamasi.ui.common.BaseViewModel
@@ -22,7 +22,7 @@ class BasketViewModel : BaseViewModel() {
 
     fun getFoodsFromBasket(context:Context){
         viewModelScope.launch(Dispatchers.IO) {
-            BasketRemoteDataSourceImpl().getBasket(context).collect {
+            BasketRemoteDataSource().getBasket(context).collect {
                 _foodsListFromBasket.postValue(it)
             }
         }
@@ -30,7 +30,7 @@ class BasketViewModel : BaseViewModel() {
 
     fun deleteFoodsFromBasket(context:Context, foodFromBasket: Basket){
         viewModelScope.launch(Dispatchers.IO) {
-            BasketRemoteDataSourceImpl().removeBasket(context,foodFromBasket).collect {
+            BasketRemoteDataSource().removeBasket(context,foodFromBasket).collect {
                 handleTask(it) {
                     _removedFoodToBasket.postValue(it)
                 }

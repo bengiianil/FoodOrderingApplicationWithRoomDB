@@ -12,6 +12,10 @@ import org.junit.Assert.*
 class ExampleUnitTest {
     @Test
     fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+        assertEquals(129.72f, calculateProductSumPrice(32.43f,4))
+    }
+
+    private fun calculateProductSumPrice(foodPrice: Float, quantity:Int): Float{
+        return foodPrice * quantity
     }
 }

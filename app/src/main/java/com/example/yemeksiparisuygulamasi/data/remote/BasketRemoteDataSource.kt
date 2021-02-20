@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.flowViaChannel
 import org.json.JSONException
 import org.json.JSONObject
 
-class BasketRemoteDataSourceImpl {
+class BasketRemoteDataSource {
     suspend fun addBasket(context: Context, food: Food, counter: Int): Flow<ResultData<Unit>> {
         return flowViaChannel { flowChannel ->
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/insert_sepet_yemek.php"

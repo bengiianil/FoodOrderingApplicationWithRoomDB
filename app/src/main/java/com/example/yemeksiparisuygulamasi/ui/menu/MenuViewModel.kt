@@ -3,8 +3,8 @@ package com.example.yemeksiparisuygulamasi.ui.menu
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.yemeksiparisuygulamasi.data.remote.BasketRemoteDataSourceImpl
-import com.example.yemeksiparisuygulamasi.data.remote.MenuRemoteDataSourceI
+import com.example.yemeksiparisuygulamasi.data.remote.BasketRemoteDataSource
+import com.example.yemeksiparisuygulamasi.data.remote.MenuRemoteDataSource
 import com.example.yemeksiparisuygulamasi.model.Food
 import com.example.yemeksiparisuygulamasi.model.ResultData
 import com.example.yemeksiparisuygulamasi.ui.common.BaseViewModel
@@ -31,7 +31,7 @@ class MenuViewModel : BaseViewModel() {
     @FlowPreview
     fun getAllFoods(context:Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            MenuRemoteDataSourceI().getAllFoods(context).collect {
+            MenuRemoteDataSource().getAllFoods(context).collect {
                 _foodList.postValue(it)
             }
         }
@@ -39,7 +39,7 @@ class MenuViewModel : BaseViewModel() {
 
     fun searchFoodsWithKeyword(context:Context, keyword: String){
         viewModelScope.launch(Dispatchers.IO) {
-            MenuRemoteDataSourceI().searchFood(context,keyword).collect {
+            MenuRemoteDataSource().searchFood(context,keyword).collect {
                 _foodList.postValue(it)
             }
         }
@@ -47,7 +47,7 @@ class MenuViewModel : BaseViewModel() {
 
     fun addFoodsToBasket(context:Context, food: Food, counter: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            BasketRemoteDataSourceImpl().addBasket(context, food, counter).collect {
+            BasketRemoteDataSource().addBasket(context, food, counter).collect {
                 handleTask(it) {
                     _addedFoodToBasket.postValue(it)
                 }

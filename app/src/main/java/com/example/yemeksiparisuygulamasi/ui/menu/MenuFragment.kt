@@ -1,14 +1,16 @@
 package com.example.yemeksiparisuygulamasi.ui.menu
 
 import android.annotation.SuppressLint
-import android.os.Build
+import android.app.Activity
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
-import androidx.annotation.RequiresApi
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -23,6 +25,7 @@ import com.example.yemeksiparisuygulamasi.ui.menu.adapter.MenuAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.alertview_layout.view.*
 import kotlinx.coroutines.FlowPreview
+
 
 class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
     override val layoutRes: Int = R.layout.fragment_menu
@@ -85,12 +88,14 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
         navController = Navigation.findNavController(view)
         viewModel.getAllFoods(this.requireContext())
         binding.crossIcon.setOnClickListener {
+            hideKeyboard()
             binding.searchEditText.isEnabled = false
             binding.searchIcon.visibility = View.VISIBLE
             binding.crossIcon.visibility = View.INVISIBLE
             binding.searchEditText.setText("")
         }
         binding.searchIcon.setOnClickListener {
+            openKeyboard()
             binding.searchEditText.isEnabled = true
             binding.searchEditText.requestFocus()
             binding.searchIcon.visibility = View.INVISIBLE
@@ -151,5 +156,19 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
             dialogInterface.dismiss()
         }
         alert.create().show()
+    }
+
+    private fun openKeyboard(){
+        val imm: InputMethodManager? = this.requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        imm?.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+    }
+
+    private fun hideKeyboard(){
+        val imm: InputMethodManager = this.requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+        var view: View? = this.requireActivity().currentFocus
+        if (view == null) {
+            view = View(this.requireActivity())
+        }
+        imm.hideSoftInputFromWindow(view.windowToken, 0)
     }
 }
