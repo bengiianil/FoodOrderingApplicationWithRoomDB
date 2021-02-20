@@ -2,13 +2,10 @@ package com.example.yemeksiparisuygulamasi.ui.menu
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -30,7 +27,7 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
     override val viewModel: MenuViewModel by viewModels()
     private lateinit var navController: NavController
     override fun observeViewModel() {
-        viewModel.restaurantList.observe(viewLifecycleOwner, Observer {
+        viewModel._foodList.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ResultData.Success -> {
                     binding.menuRecyclerView.setHasFixedSize(true)

@@ -26,10 +26,10 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
         viewModel.addedFoodToBasket.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ResultData.Success -> {
-                   println(it.data)
+                    // Todo : Ekrana ekleme başarılı oldu toastı çıksın
                 }
                 is ResultData.Failed -> {
-                    println(it.error)
+                    // Todo : Ekrana ekleme başarısız oldu toastı çıksın
                 }
                 is ResultData.Loading -> {
 
@@ -41,6 +41,7 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
         viewModel.foodsListFromBasket.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ResultData.Success -> {
+                    var sumPrice = 0
                     binding.basketRecyclerView.setHasFixedSize(true)
                     binding.basketRecyclerView.layoutManager = StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL)
                     binding.basketRecyclerView.adapter =
@@ -54,6 +55,11 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
                             })
                     binding.basketRecyclerView.visibility = View.VISIBLE
                     binding.noProductInBasketText.visibility = View.GONE
+
+                    it.data?.forEach {
+                        sumPrice += (it.food.price * it.orderQuantity)
+                    }
+                    binding.sumBasketPriceText.text = sumPrice.toString()
                 }
                 is ResultData.Failed -> {
                     binding.basketRecyclerView.visibility = View.GONE
@@ -71,7 +77,7 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
                    viewModel.getFoodsFromBasket(this.requireContext())
                 }
                 is ResultData.Failed -> {
-                    println(it.error)
+
                 }
                 is ResultData.Loading -> {
 
@@ -82,7 +88,5 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>(){
 
     override fun viewCreated(view: View, savedInstanceState: Bundle?) {
         viewModel.getFoodsFromBasket(this.requireContext())
-        //viewModel.addFoodsToBasket(this.requireContext(), Food(213,"yemek","image",43),3)
-        //viewModel.deleteFoodsFromBasket(this.requireContext(), Basket( Food(213,"yemek","image",43),1))
     }
 }

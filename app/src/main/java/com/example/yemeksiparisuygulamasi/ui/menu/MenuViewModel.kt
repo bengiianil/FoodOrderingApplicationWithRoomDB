@@ -2,7 +2,6 @@ package com.example.yemeksiparisuygulamasi.ui.menu
 
 import android.content.Context
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.yemeksiparisuygulamasi.domain.entity.Food
@@ -22,9 +21,9 @@ class MenuViewModel @ViewModelInject constructor(
     private val addFoodToBasketUseCase: AddFoodToBasketUseCase,
 ) : BaseViewModel() {
 
-    private val _restaurantList = MutableLiveData<ResultData<List<Food>>>()
-    val restaurantList: MutableLiveData<ResultData<List<Food>>>
-        get() = _restaurantList
+    private val foodList = MutableLiveData<ResultData<List<Food>>>()
+    val _foodList: MutableLiveData<ResultData<List<Food>>>
+        get() = foodList
 
     private val _searchedFoodList = MutableLiveData<ResultData<List<Food>>>()
     val searchedFoodList: MutableLiveData<ResultData<List<Food>>>
@@ -38,7 +37,7 @@ class MenuViewModel @ViewModelInject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             getAllFoodsUseCase.invoke(context).collect { it ->
                 handleTask(it) {
-                    _restaurantList.postValue(it)
+                    foodList.postValue(it)
                 }
             }
         }
