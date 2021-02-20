@@ -1,7 +1,11 @@
 package com.example.yemeksiparisuygulamasi.ui.basket
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
@@ -10,14 +14,21 @@ import com.example.yemeksiparisuygulamasi.databinding.FragmentBasketBinding
 import com.example.yemeksiparisuygulamasi.model.Basket
 import com.example.yemeksiparisuygulamasi.model.ResultData
 import com.example.yemeksiparisuygulamasi.ui.basket.adapter.BasketAdapter
-import com.example.yemeksiparisuygulamasi.ui.common.BaseFragment
 
-class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>() {
+class BasketFragment : Fragment() {
+    private lateinit var binding: FragmentBasketBinding
+    private lateinit var viewModel: BasketViewModel
 
-    override val layoutRes: Int = R.layout.fragment_basket
-    override lateinit var viewModel: BasketViewModel
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_basket, container, false)
+        return binding.root
+    }
 
-    override fun observeViewModel() {
+    private fun observeViewModel() {
         viewModel.foodsListFromBasket.observe(viewLifecycleOwner, Observer {
             if(it != null) {
                 var sumPrice = 0
@@ -67,8 +78,10 @@ class BasketFragment : BaseFragment<BasketViewModel, FragmentBasketBinding>() {
         })
     }
 
-    override fun viewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(BasketViewModel::class.java)
+        observeViewModel()
         viewModel.getFoodsFromBasket(this.requireContext())
     }
 }

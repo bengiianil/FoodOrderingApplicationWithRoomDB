@@ -8,9 +8,11 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
@@ -20,20 +22,28 @@ import com.example.yemeksiparisuygulamasi.R
 import com.example.yemeksiparisuygulamasi.databinding.FragmentMenuBinding
 import com.example.yemeksiparisuygulamasi.model.Food
 import com.example.yemeksiparisuygulamasi.model.ResultData
-import com.example.yemeksiparisuygulamasi.ui.common.BaseFragment
 import com.example.yemeksiparisuygulamasi.ui.menu.adapter.MenuAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.alertview_layout.view.*
 import kotlinx.coroutines.FlowPreview
 
 
-class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
-    override val layoutRes: Int = R.layout.fragment_menu
-    override lateinit var viewModel: MenuViewModel
+class MenuFragment : Fragment() {
     private lateinit var navController: NavController
-    override fun observeViewModel() {
+    private lateinit var binding: FragmentMenuBinding
+    private lateinit var viewModel: MenuViewModel
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_menu, container, false)
+        return binding.root
+    }
+
+    private fun observeViewModel() {
         viewModel._foodList.observe(viewLifecycleOwner, Observer {
-            if(it != null) {
+            if (it != null) {
                 binding.menuRecyclerView.setHasFixedSize(true)
                 binding.menuRecyclerView.layoutManager =
                     StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -51,7 +61,7 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
         })
 
         viewModel.searchedFoodList.observe(viewLifecycleOwner, Observer {
-            if(it != null) {
+            if (it != null) {
                 binding.menuRecyclerView.setHasFixedSize(true)
                 binding.menuRecyclerView.layoutManager =
                     StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
@@ -83,9 +93,10 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
     }
 
     @FlowPreview
-    override fun viewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewModel = ViewModelProvider(this).get(MenuViewModel::class.java)
-        navController = Navigation.findNavController(view)
+        observeViewModel()
         viewModel.getAllFoods(this.requireContext())
         binding.crossIcon.setOnClickListener {
             hideKeyboard()
@@ -158,13 +169,15 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
         alert.create().show()
     }
 
-    private fun openKeyboard(){
-        val imm: InputMethodManager? = this.requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+    private fun openKeyboard() {
+        val imm: InputMethodManager? = this.requireActivity()
+            .getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
         imm?.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
     }
 
-    private fun hideKeyboard(){
-        val imm: InputMethodManager = this.requireActivity().getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    private fun hideKeyboard() {
+        val imm: InputMethodManager = this.requireActivity()
+            .getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
         var view: View? = this.requireActivity().currentFocus
         if (view == null) {
             view = View(this.requireActivity())

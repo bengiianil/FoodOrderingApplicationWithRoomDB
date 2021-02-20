@@ -15,7 +15,7 @@ import org.json.JSONException
 import org.json.JSONObject
 
 class BasketRemoteDataSource {
-    suspend fun addBasket(context: Context, food: Food, counter: Int): Flow<ResultData<Unit>> {
+    fun addBasket(context: Context, food: Food, counter: Int): Flow<ResultData<Unit>> {
         return flowViaChannel { flowChannel ->
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/insert_sepet_yemek.php"
 
@@ -41,7 +41,7 @@ class BasketRemoteDataSource {
         }
     }
 
-    suspend fun removeBasket(context: Context, foodFromBasket: Basket): Flow<ResultData<Unit>> {
+    fun removeBasket(context: Context, foodFromBasket: Basket): Flow<ResultData<Unit>> {
         return flowViaChannel { flowChannel ->
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/delete_sepet_yemek.php"
 
@@ -68,7 +68,7 @@ class BasketRemoteDataSource {
         }
     }
 
-    suspend fun getBasket(context: Context): Flow<List<Basket>?> {
+    fun getBasket(context: Context): Flow<List<Basket>?> {
         return flowViaChannel { flowChannel ->
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/tum_sepet_yemekler.php"
 

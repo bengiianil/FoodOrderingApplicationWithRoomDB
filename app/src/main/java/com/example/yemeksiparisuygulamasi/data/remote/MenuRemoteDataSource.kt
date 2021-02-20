@@ -13,21 +13,20 @@ import kotlinx.coroutines.flow.flowViaChannel
 import org.json.JSONException
 import org.json.JSONObject
 
-class MenuRemoteDataSource
-     {
+class MenuRemoteDataSource {
     @FlowPreview
-    suspend fun getAllFoods(context: Context): Flow<List<Food>?> {
+    fun getAllFoods(context: Context): Flow<List<Food>?> {
         return flowViaChannel { flowChannel ->
-            val foodList : ArrayList<Food> = arrayListOf()
+            val foodList: ArrayList<Food> = arrayListOf()
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/tum_yemekler.php"
 
             val requestToUrl = StringRequest(Request.Method.GET, webServiceUrl, { responseOfUrl ->
 
-                try{
+                try {
                     val jsonObj = JSONObject(responseOfUrl)
                     val foods = jsonObj.getJSONArray("yemekler")
 
-                    for(index in 0 until foods.length()){
+                    for (index in 0 until foods.length()) {
                         val foodData = foods.getJSONObject(index)
 
                         val yemek_id = foodData.getInt("yemek_id")
@@ -39,8 +38,7 @@ class MenuRemoteDataSource
                         foodList.add(food)
                     }
                     flowChannel.sendBlocking(foodList)
-                }
-                catch(e: JSONException){
+                } catch (e: JSONException) {
                     flowChannel.sendBlocking(null)
                 }
 
@@ -51,7 +49,8 @@ class MenuRemoteDataSource
             Volley.newRequestQueue(context).add(requestToUrl)
         }
     }
-         suspend fun searchFood(context: Context, keyWord: String): Flow<List<Food>?> {
+
+    fun searchFood(context: Context, keyWord: String): Flow<List<Food>?> {
         return flowViaChannel { flowChannel ->
             val foodList: ArrayList<Food> = arrayListOf()
             val webServiceUrl = "http://kasimadalan.pe.hu/yemekler/tum_yemekler_arama.php"

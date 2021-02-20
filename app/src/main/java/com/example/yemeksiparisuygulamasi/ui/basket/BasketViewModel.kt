@@ -2,16 +2,16 @@ package com.example.yemeksiparisuygulamasi.ui.basket
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.yemeksiparisuygulamasi.data.remote.BasketRemoteDataSource
 import com.example.yemeksiparisuygulamasi.model.Basket
 import com.example.yemeksiparisuygulamasi.model.ResultData
-import com.example.yemeksiparisuygulamasi.ui.common.BaseViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
-class BasketViewModel : BaseViewModel() {
+class BasketViewModel : ViewModel() {
     private val _removedFoodToBasket = MutableLiveData<ResultData<Unit>>()
     val removedFoodToBasket: MutableLiveData<ResultData<Unit>>
         get() = _removedFoodToBasket
@@ -31,9 +31,7 @@ class BasketViewModel : BaseViewModel() {
     fun deleteFoodsFromBasket(context:Context, foodFromBasket: Basket){
         viewModelScope.launch(Dispatchers.IO) {
             BasketRemoteDataSource().removeBasket(context,foodFromBasket).collect {
-                handleTask(it) {
-                    _removedFoodToBasket.postValue(it)
-                }
+                _removedFoodToBasket.postValue(it)
             }
         }
     }
