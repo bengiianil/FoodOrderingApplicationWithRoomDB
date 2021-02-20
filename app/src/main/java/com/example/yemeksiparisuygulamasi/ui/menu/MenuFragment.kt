@@ -5,8 +5,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -44,7 +46,7 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
                             })
                 }
                 is ResultData.Failed -> {
-                    Toast.makeText(this.requireContext(), "Ürününler şu anda alınamıyor lütfen daha sonra tekrar deneyiniz.", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this.requireContext(), "Ürünler şu an alınamıyor lütfen daha sonra tekrar deneyiniz.", Toast.LENGTH_SHORT).show()
                 }
                 is ResultData.Loading -> {
 
@@ -55,8 +57,6 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
         viewModel.searchedFoodList.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ResultData.Success -> {
-                    Toast.makeText(this.requireContext(), "Ürününüz sepete eklendi.", Toast.LENGTH_SHORT).show()
-
                     binding.menuRecyclerView.setHasFixedSize(true)
                     binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
                     binding.menuRecyclerView.adapter =
@@ -82,9 +82,17 @@ class MenuFragment : BaseFragment<MenuViewModel, FragmentMenuBinding>() {
     override fun viewCreated(view: View, savedInstanceState: Bundle?) {
         navController = Navigation.findNavController(view)
         viewModel.getAllFoods(this.requireContext())
-        Handler().postDelayed({
-            viewModel.searchFoodsWithKeyword(this.requireContext(),"ayr")
-        },5000)
+        binding.menuSearchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener{
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                binding.menuSearchView.query?.let { viewModel.searchFoodsWithKeyword(this@MenuFragment.requireContext(), it.toString()) }
+                return true
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                binding.menuSearchView.query?.let { viewModel.searchFoodsWithKeyword(this@MenuFragment.requireContext(), it.toString()) }
+                return true
+            }
+        })
     }
 
     @SuppressLint("SetTextI18n")

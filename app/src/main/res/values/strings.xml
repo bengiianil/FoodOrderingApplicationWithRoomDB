@@ -3,9 +3,11 @@
     <string name="title_menu">Menu</string>
     <string name="title_basket">Basket</string>
 
-        <string name="yemek_adi">Yemek Adı</string>
-        <string name="adet">Adet:</string>
-        <string name="toplam_tutar">Toplam Tutar:</string>
-        <string name="genel_toplam">Genel Toplam:</string>
+    <string name="yemek_adi">Yemek Adı</string>
+    <string name="adet">Adet:</string>
+    <string name="toplam_tutar">Toplam Tutar:</string>
+    <string name="genel_toplam">Genel Toplam:</string>
+
+
 
 </resources>

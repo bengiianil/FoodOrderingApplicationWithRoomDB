@@ -66,7 +66,7 @@ abstract class BaseFragment<T : BaseViewModel, B : ViewDataBinding> : Fragment()
                 }
                 is ResultData.Failed -> {
                     hideLoading()
-                    showErrorDialog(it.error)
+                    //showErrorDialog(it.error)
                 }
             }
         }
