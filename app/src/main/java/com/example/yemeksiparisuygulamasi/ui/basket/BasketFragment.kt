@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
+import com.example.yemeksiparisuygulamasi.BR
 import com.example.yemeksiparisuygulamasi.R
 import com.example.yemeksiparisuygulamasi.databinding.FragmentBasketBinding
 import com.example.yemeksiparisuygulamasi.model.Basket
@@ -18,7 +19,8 @@ import com.example.yemeksiparisuygulamasi.ui.basket.adapter.BasketAdapter
 class BasketFragment : Fragment() {
     private lateinit var binding: FragmentBasketBinding
     private lateinit var viewModel: BasketViewModel
-
+    var sumPrice = 0
+    var sumText = "Genel toplam: "
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -34,7 +36,8 @@ class BasketFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.foodsListFromBasket.observe(viewLifecycleOwner, Observer {
             if(it != null) {
-                var sumPrice = 0
+                sumPrice = 0
+                sumText = "Genel toplam: "
                 binding.noProductInBasketText.visibility = View.INVISIBLE
                 binding.basketRecyclerView.visibility = View.VISIBLE
                 binding.basketRecyclerView.setHasFixedSize(true)
@@ -59,7 +62,9 @@ class BasketFragment : Fragment() {
                 it.forEach {
                     sumPrice += (it.food.price * it.orderQuantity)
                 }
-                binding.sumBasketPriceText.text = "Genel Toplam: ${sumPrice} \u20BA"
+                sumText = "Genel toplam: $sumPrice"
+                binding.basketSumValue = sumText //DATA BINDING
+                //binding.sumBasketPriceText.text = "Genel Toplam: ${sumPrice} \u20BA"
             }
             else{
                 binding.noProductInBasketText.visibility = View.VISIBLE
@@ -85,8 +90,11 @@ class BasketFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        binding.setVariable(BR.basket_sum_value,sumText)    //DATA BINDING
+        binding.executePendingBindings()                    //DATA BINDING
         viewModel = ViewModelProvider(this).get(BasketViewModel::class.java)
         observeViewModel()
         viewModel.getFoodsFromBasket(this.requireContext())
+
     }
 }

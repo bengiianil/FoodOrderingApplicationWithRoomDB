@@ -2,6 +2,11 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="basket_sum_value"
+            type="java.lang.String" />
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/ConstraitLayout"
@@ -40,6 +45,7 @@
             android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
+            android:text="@{basket_sum_value, default=@string/placeholder_text}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.49"

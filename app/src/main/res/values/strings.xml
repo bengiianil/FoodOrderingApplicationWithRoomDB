@@ -7,6 +7,6 @@
     <string name="adet">Adet:</string>
     <string name="toplam_tutar">Toplam Tutar:</string>
     <string name="genel_toplam">Genel Toplam:</string>
-
+    <string name="placeholder_text">Genel Toplam: 0</string>
 
 </resources>
