@@ -99,9 +99,6 @@ class BasketRemoteDataSource {
 
                         val yemek = Food(yemek_id, yemek_adi, yemek_resim_adi, yemek_fiyat)
                         val sepettekiler = Basket(yemek, yemek_siparis_adet)
-                        val sepettekiler2 = HashMap<Int, Int>()
-                        sepettekiler2[yemek_id] = yemek_siparis_adet
-
 
                         tempSepetListesi.add(sepettekiler)
                     }

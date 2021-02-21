@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -25,6 +26,7 @@ import com.example.yemeksiparisuygulamasi.model.ResultData
 import com.example.yemeksiparisuygulamasi.ui.menu.adapter.MenuAdapter
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.alertview_layout.view.*
+import kotlinx.android.synthetic.main.fragment_menu.*
 import kotlinx.coroutines.FlowPreview
 
 
@@ -38,6 +40,9 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_menu, container, false)
+
+        binding.menuToolbar.title = "Menü"
+
         return binding.root
     }
 
@@ -80,10 +85,8 @@ class MenuFragment : Fragment() {
         viewModel.addedFoodToBasket.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ResultData.Success -> {
-                    // Todo: ekleme başarılı
                 }
                 is ResultData.Failed -> {
-
                 }
                 is ResultData.Loading -> {
 
@@ -130,6 +133,22 @@ class MenuFragment : Fragment() {
 
             }
         })
+
+        /*override fun viewCreated(view: View, savedInstanceState: Bundle?) {
+            navController = Navigation.findNavController(view)
+            viewModel.getAllFoods(this.requireContext())
+            binding.menuSearchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener{
+                override fun onQueryTextSubmit(p0: String?): Boolean {
+                    binding.menuSearchView.query?.let { viewModel.searchFoodsWithKeyword(this@MenuFragment.requireContext(), it.toString()) }
+                    return true
+                }
+
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    binding.menuSearchView.query?.let { viewModel.searchFoodsWithKeyword(this@MenuFragment.requireContext(), it.toString()) }
+                    return true
+                }
+            })
+        }*/
     }
 
     @SuppressLint("SetTextI18n")
@@ -161,9 +180,11 @@ class MenuFragment : Fragment() {
         }
 
         alert.setPositiveButton("Sepete Ekle") { dialogInterface, i ->
+            Toast.makeText(this.requireContext(), "${food.name} Sepete Eklendi.", Toast.LENGTH_SHORT).show()
             viewModel.addFoodsToBasket(this@MenuFragment.requireContext(), food, counter)
         }
         alert.setNegativeButton("İptal") { dialogInterface, i ->
+            Toast.makeText(this.requireContext(), "Seçim İptal Edildi.", Toast.LENGTH_SHORT).show()
             dialogInterface.dismiss()
         }
         alert.create().show()
