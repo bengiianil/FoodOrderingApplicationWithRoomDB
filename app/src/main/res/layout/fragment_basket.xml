@@ -14,18 +14,20 @@
             android:id="@+id/basket_toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
+            android:background="@color/red"
+            android:foregroundTint="#FFFFFF"
             android:minHeight="?attr/actionBarSize"
             android:theme="?attr/actionBarTheme"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:navigationIcon="@drawable/ic_baseline_shopping_cart_24" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/basket_recycler_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/sum_basket_price_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/basket_toolbar" />
@@ -34,7 +36,8 @@
             android:id="@+id/sum_basket_price_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="@null"
+            android:background="@color/purple_700"
+            android:textAlignment="center"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             app:layout_constraintBottom_toBottomOf="parent"

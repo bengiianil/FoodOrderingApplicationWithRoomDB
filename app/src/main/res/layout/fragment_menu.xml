@@ -11,12 +11,13 @@
         android:id="@+id/menu_toolbar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="?attr/colorPrimary"
+        android:background="@color/red"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_baseline_menu_book_24" />
 
     <ImageView
         android:id="@+id/cross_icon"
@@ -24,7 +25,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:tint="#FFFFFF"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/menu_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +37,6 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_weight="1"
-        android:tint="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/menu_toolbar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/menu_toolbar"
@@ -47,15 +46,17 @@
         android:id="@+id/searchEditText"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="48dp"
         android:background="@null"
         android:ems="10"
         android:inputType="textPersonName"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toBottomOf="@+id/menu_toolbar"
         app:layout_constraintEnd_toStartOf="@+id/search_icon"
+        app:layout_constraintHorizontal_bias="0.728"
         app:layout_constraintStart_toStartOf="@+id/menu_toolbar"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/menu_recycler_view"

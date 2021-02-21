@@ -25,6 +25,9 @@ class BasketFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_basket, container, false)
+
+        binding.basketToolbar.title = "Sepetim"
+
         return binding.root
     }
 
@@ -50,15 +53,17 @@ class BasketFragment : Fragment() {
                             }
                         })
                 binding.basketRecyclerView.visibility = View.VISIBLE
+                binding.sumBasketPriceText.visibility = View.VISIBLE
                 binding.noProductInBasketText.visibility = View.GONE
 
                 it.forEach {
                     sumPrice += (it.food.price * it.orderQuantity)
                 }
-                binding.sumBasketPriceText.text = sumPrice.toString()
+                binding.sumBasketPriceText.text = "Genel Toplam: ${sumPrice} \u20BA"
             }
             else{
                 binding.noProductInBasketText.visibility = View.VISIBLE
+                binding.sumBasketPriceText.visibility = View.INVISIBLE
                 binding.basketRecyclerView.visibility = View.INVISIBLE
             }
         })
