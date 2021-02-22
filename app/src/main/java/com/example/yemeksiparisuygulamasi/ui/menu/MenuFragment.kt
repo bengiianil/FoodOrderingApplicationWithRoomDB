@@ -12,12 +12,11 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.example.yemeksiparisuygulamasi.R
 import com.example.yemeksiparisuygulamasi.databinding.FragmentMenuBinding
@@ -31,7 +30,6 @@ import kotlinx.coroutines.FlowPreview
 
 
 class MenuFragment : Fragment() {
-    private lateinit var navController: NavController
     private lateinit var binding: FragmentMenuBinding
     private lateinit var viewModel: MenuViewModel
     override fun onCreateView(
@@ -40,18 +38,20 @@ class MenuFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_menu, container, false)
-
-        binding.menuToolbar.title = "Menü"
+        binding.menuToolbar.setTitle("Menü")
+        (activity as AppCompatActivity).setSupportActionBar(binding.menuToolbar)
 
         return binding.root
     }
 
     private fun observeViewModel() {
-        viewModel._foodList.observe(viewLifecycleOwner, Observer {
+        viewModel.foodList.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 binding.menuRecyclerView.setHasFixedSize(true)
-                binding.menuRecyclerView.layoutManager =
-                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(
+                    2,
+                    StaggeredGridLayoutManager.VERTICAL
+                )
                 binding.menuRecyclerView.adapter =
                     MenuAdapter(
                         this.requireContext(),
@@ -68,8 +68,10 @@ class MenuFragment : Fragment() {
         viewModel.searchedFoodList.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 binding.menuRecyclerView.setHasFixedSize(true)
-                binding.menuRecyclerView.layoutManager =
-                    StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(
+                    2,
+                    StaggeredGridLayoutManager.VERTICAL
+                )
                 binding.menuRecyclerView.adapter =
                     MenuAdapter(
                         this.requireContext(),
@@ -104,6 +106,7 @@ class MenuFragment : Fragment() {
         binding.crossIcon.setOnClickListener {
             hideKeyboard()
             binding.searchEditText.isEnabled = false
+            binding.menuToolbar.title = "Menü"
             binding.searchIcon.visibility = View.VISIBLE
             binding.crossIcon.visibility = View.INVISIBLE
             binding.searchEditText.setText("")
@@ -111,6 +114,7 @@ class MenuFragment : Fragment() {
         binding.searchIcon.setOnClickListener {
             openKeyboard()
             binding.searchEditText.isEnabled = true
+            binding.menuToolbar.title = ""
             binding.searchEditText.requestFocus()
             binding.searchIcon.visibility = View.INVISIBLE
             binding.crossIcon.visibility = View.VISIBLE
@@ -122,33 +126,16 @@ class MenuFragment : Fragment() {
                         this@MenuFragment.requireContext(),
                         it.toString()
                     )
+                    binding.menuRecyclerView.visibility = View.VISIBLE
                 }
             }
 
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-
             }
         })
-
-        /*override fun viewCreated(view: View, savedInstanceState: Bundle?) {
-            navController = Navigation.findNavController(view)
-            viewModel.getAllFoods(this.requireContext())
-            binding.menuSearchView.setOnQueryTextListener(object : android.widget.SearchView.OnQueryTextListener{
-                override fun onQueryTextSubmit(p0: String?): Boolean {
-                    binding.menuSearchView.query?.let { viewModel.searchFoodsWithKeyword(this@MenuFragment.requireContext(), it.toString()) }
-                    return true
-                }
-
-                override fun onQueryTextChange(p0: String?): Boolean {
-                    binding.menuSearchView.query?.let { viewModel.searchFoodsWithKeyword(this@MenuFragment.requireContext(), it.toString()) }
-                    return true
-                }
-            })
-        }*/
     }
 
     @SuppressLint("SetTextI18n")
@@ -180,7 +167,11 @@ class MenuFragment : Fragment() {
         }
 
         alert.setPositiveButton("Sepete Ekle") { dialogInterface, i ->
-            Toast.makeText(this.requireContext(), "${food.name} Sepete Eklendi.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this.requireContext(),
+                "${food.name} Sepete Eklendi.",
+                Toast.LENGTH_SHORT
+            ).show()
             viewModel.addFoodsToBasket(this@MenuFragment.requireContext(), food, counter)
         }
         alert.setNegativeButton("İptal") { dialogInterface, i ->

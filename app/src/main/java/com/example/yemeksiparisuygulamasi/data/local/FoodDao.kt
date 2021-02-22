@@ -9,11 +9,11 @@ import kotlinx.coroutines.flow.Flow
 interface FoodDao {
 
     @Insert
-    suspend fun insertAll(countries: List<FoodRoom>) : List<Long>
+    suspend fun insertAll(foods: List<FoodRoom>) : List<Long>
 
     @Query("SELECT * FROM FoodRoom")
-    suspend fun getAllCountries() : List<FoodRoom>
+    suspend fun getAllFoods() : List<FoodRoom>
 
     @Query("DELETE FROM FoodRoom")
-    suspend fun deleteAllCountries()
+    suspend fun deleteAllFoods()
 }

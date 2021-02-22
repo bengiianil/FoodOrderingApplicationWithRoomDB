@@ -10,10 +10,9 @@ import com.example.yemeksiparisuygulamasi.model.FoodRoom
 @Database(entities = [FoodRoom::class],version = 1)
 abstract class FoodDatabase : RoomDatabase() {
 
-    abstract fun countryDao() : FoodDao
+    abstract fun foodDao() : FoodDao
 
     //Singleton
-
     companion object {
 
         @Volatile private var instance : FoodDatabase? = null
@@ -28,7 +27,7 @@ abstract class FoodDatabase : RoomDatabase() {
 
 
         private fun makeDatabase(context : Context) = Room.databaseBuilder(
-            context.applicationContext,FoodDatabase::class.java,"countrydatabase"
+            context.applicationContext,FoodDatabase::class.java,"fooddatabase"
         ).build()
     }
 }

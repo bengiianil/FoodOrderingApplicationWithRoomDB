@@ -17,9 +17,9 @@ import kotlinx.coroutines.launch
 
 class MenuViewModel : ViewModel() {
 
-    private val foodList = MutableLiveData<List<Food>>()
-    val _foodList: MutableLiveData<List<Food>>
-        get() = foodList
+    private val _foodList = MutableLiveData<List<Food>>()
+    val foodList: MutableLiveData<List<Food>>
+        get() = _foodList
 
     private val _searchedFoodList = MutableLiveData<List<Food>>()
     val searchedFoodList: MutableLiveData<List<Food>>
@@ -62,8 +62,10 @@ class MenuViewModel : ViewModel() {
 
     private fun insertFoodsToRoomDB(context: Context, it: List<Food>) {
         viewModelScope.launch(Dispatchers.IO) {
-            val dao = FoodDatabase(context).countryDao()
-            dao.deleteAllCountries()
+            MenuRemoteDataSource().getAllFoods(context).collect {
+                _foodList.postValue(it)
+                /*val dao = FoodDatabase(context).foodDao()
+            dao.deleteAllFoods()
             val foodRoomList: ArrayList<FoodRoom> = arrayListOf()
             it.forEach {
                 foodRoomList.add(FoodRoom(it.name, it.image_path, it.price.toString()))
@@ -73,14 +75,15 @@ class MenuViewModel : ViewModel() {
             while (i < it.size) {
                 it[i].id = listLong[i].toInt()
                 i += 1
+            }*/
             }
         }
     }
 
     private fun getFoodsFromRoomDB(context: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            val dao = FoodDatabase(context).countryDao()
-            val roomList = dao.getAllCountries()
+            val dao = FoodDatabase(context).foodDao()
+            val roomList = dao.getAllFoods()
             val list: ArrayList<Food> = arrayListOf()
             roomList.forEach {
                 list.add(Food(it.foodId, it.foodName!!, it.foodImagePath!!, it.foodPrice!!.toInt()))
