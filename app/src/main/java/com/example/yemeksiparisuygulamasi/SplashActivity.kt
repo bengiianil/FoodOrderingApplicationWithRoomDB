@@ -12,6 +12,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
         animationView.setAnimation("splash_animation.json")
         animationView.playAnimation()
         animationView.addAnimatorListener( object : Animator.AnimatorListener{
@@ -27,7 +28,7 @@ class SplashActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             }
-
+//
             override fun onAnimationCancel(animation: Animator?) {
             }
 

@@ -10,6 +10,7 @@
         android:id="@+id/animationView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -18,5 +19,5 @@
         app:lottie_autoPlay="false"
         app:lottie_fileName="splash_animation.json"
         app:lottie_loop="false"
-        app:lottie_url="https://lottiefiles.com/34799-restaurant-locations"/>
+        app:lottie_url="https://lottiefiles.com/34799-restaurant-locations" />
 </androidx.constraintlayout.widget.ConstraintLayout>

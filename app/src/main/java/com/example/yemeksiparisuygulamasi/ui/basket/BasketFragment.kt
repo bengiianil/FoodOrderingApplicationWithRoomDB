@@ -18,18 +18,16 @@ import com.example.yemeksiparisuygulamasi.model.ResultData
 import com.example.yemeksiparisuygulamasi.ui.basket.adapter.BasketAdapter
 
 class BasketFragment : Fragment() {
+
     private lateinit var binding: FragmentBasketBinding
     private lateinit var viewModel: BasketViewModel
     var sumPrice = 0
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_basket, container, false)
 
         binding.basketToolbar.title = "Sepetim"
+        binding.basketToolbar.setTitleTextColor(this.requireContext().getColor(R.color.white))
 
         return binding.root
     }
@@ -47,10 +45,7 @@ class BasketFragment : Fragment() {
                         it as ArrayList<Basket>,
                         object : BasketAdapter.BasketItemClickListener {
                             override fun delete(foodFromBasket: Basket) {
-                                viewModel.deleteFoodsFromBasket(
-                                    this@BasketFragment.requireContext(),
-                                    foodFromBasket
-                                )
+                                viewModel.deleteFoodsFromBasket(this@BasketFragment.requireContext(), foodFromBasket)
                             }
                         })
                 binding.basketRecyclerView.visibility = View.VISIBLE

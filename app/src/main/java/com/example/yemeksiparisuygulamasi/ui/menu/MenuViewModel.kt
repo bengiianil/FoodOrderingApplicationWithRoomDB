@@ -16,7 +16,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 class MenuViewModel : ViewModel() {
-
     private val _foodList = MutableLiveData<List<Food>>()
     val foodList: MutableLiveData<List<Food>>
         get() = _foodList
@@ -62,20 +61,16 @@ class MenuViewModel : ViewModel() {
 
     private fun insertFoodsToRoomDB(context: Context, it: List<Food>) {
         viewModelScope.launch(Dispatchers.IO) {
-            MenuRemoteDataSource().getAllFoods(context).collect {
-                _foodList.postValue(it)
-                /*val dao = FoodDatabase(context).foodDao()
+            val dao = FoodDatabase(context).foodDao()
             dao.deleteAllFoods()
             val foodRoomList: ArrayList<FoodRoom> = arrayListOf()
             it.forEach {
                 foodRoomList.add(FoodRoom(it.name, it.image_path, it.price.toString()))
             }
-            val listLong = dao.insertAll(foodRoomList) // -> list -> individual
             var i = 0
             while (i < it.size) {
-                it[i].id = listLong[i].toInt()
+                it[i].id = it[i].id
                 i += 1
-            }*/
             }
         }
     }

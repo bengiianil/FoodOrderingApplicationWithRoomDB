@@ -1,5 +1,6 @@
 package com.example.yemeksiparisuygulamasi.ui.menu
 
+
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
@@ -28,19 +29,16 @@ import kotlinx.android.synthetic.main.alertview_layout.view.*
 import kotlinx.android.synthetic.main.fragment_menu.*
 import kotlinx.coroutines.FlowPreview
 
-
 class MenuFragment : Fragment() {
     private lateinit var binding: FragmentMenuBinding
     private lateinit var viewModel: MenuViewModel
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_menu, container, false)
         binding.menuToolbar.setTitle("Menü")
         (activity as AppCompatActivity).setSupportActionBar(binding.menuToolbar)
 
+        binding.menuToolbar.setTitleTextColor(this.requireContext().getColor(R.color.white))
         return binding.root
     }
 
@@ -48,10 +46,7 @@ class MenuFragment : Fragment() {
         viewModel.foodList.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 binding.menuRecyclerView.setHasFixedSize(true)
-                binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(
-                    2,
-                    StaggeredGridLayoutManager.VERTICAL
-                )
+                binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
                 binding.menuRecyclerView.adapter =
                     MenuAdapter(
                         this.requireContext(),
@@ -68,10 +63,7 @@ class MenuFragment : Fragment() {
         viewModel.searchedFoodList.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 binding.menuRecyclerView.setHasFixedSize(true)
-                binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(
-                    2,
-                    StaggeredGridLayoutManager.VERTICAL
-                )
+                binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
                 binding.menuRecyclerView.adapter =
                     MenuAdapter(
                         this.requireContext(),
@@ -106,7 +98,7 @@ class MenuFragment : Fragment() {
         binding.crossIcon.setOnClickListener {
             hideKeyboard()
             binding.searchEditText.isEnabled = false
-            binding.menuToolbar.title = "Menü"
+            binding.menuToolbar.setTitle("Menü")
             binding.searchIcon.visibility = View.VISIBLE
             binding.crossIcon.visibility = View.INVISIBLE
             binding.searchEditText.setText("")
@@ -114,28 +106,27 @@ class MenuFragment : Fragment() {
         binding.searchIcon.setOnClickListener {
             openKeyboard()
             binding.searchEditText.isEnabled = true
-            binding.menuToolbar.title = ""
+            binding.menuToolbar.setTitle("")
             binding.searchEditText.requestFocus()
             binding.searchIcon.visibility = View.INVISIBLE
             binding.crossIcon.visibility = View.VISIBLE
         }
+        binding.searchEditText.setOnClickListener {
+            binding.searchEditText.setText("")
+            binding.searchEditText.isEnabled = false
+        }
         binding.searchEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(p0: Editable?) {
                 binding.searchEditText.text?.let {
-                    viewModel.searchFoodsWithKeyword(
-                        this@MenuFragment.requireContext(),
-                        it.toString()
-                    )
-                    binding.menuRecyclerView.visibility = View.VISIBLE
+                    viewModel.searchFoodsWithKeyword(this@MenuFragment.requireContext(), it.toString())
                 }
             }
-
             override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
-
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
             }
         })
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -167,11 +158,7 @@ class MenuFragment : Fragment() {
         }
 
         alert.setPositiveButton("Sepete Ekle") { dialogInterface, i ->
-            Toast.makeText(
-                this.requireContext(),
-                "${food.name} Sepete Eklendi.",
-                Toast.LENGTH_SHORT
-            ).show()
+            Toast.makeText(this.requireContext(), "${food.name} Sepete Eklendi.", Toast.LENGTH_SHORT).show()
             viewModel.addFoodsToBasket(this@MenuFragment.requireContext(), food, counter)
         }
         alert.setNegativeButton("İptal") { dialogInterface, i ->

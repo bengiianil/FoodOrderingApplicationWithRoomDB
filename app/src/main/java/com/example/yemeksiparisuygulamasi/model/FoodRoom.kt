@@ -15,8 +15,7 @@ data class FoodRoom(
     val foodImagePath: String?,
     @ColumnInfo(name = "price")
     @SerializedName("price")
-    val foodPrice: String?)
-{
+    val foodPrice: String?) {
     @PrimaryKey(autoGenerate = true)
     var foodId: Int = 0
 }
