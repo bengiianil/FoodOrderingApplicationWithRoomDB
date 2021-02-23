@@ -53,17 +53,11 @@ class BasketRemoteDataSource {
             }) {
 
                 override fun getParams(): MutableMap<String, String> {
-
                     val parameter = HashMap<String, String>()
-
                     parameter["yemek_id"] = ((foodFromBasket.food).id).toString()
-
                     return parameter
                 }
             }
-            //SepetListesi.clear()
-
-
             Volley.newRequestQueue(context).add(requestToUrl)
         }
     }
@@ -77,8 +71,6 @@ class BasketRemoteDataSource {
                 var tempSepetListesi = ArrayList<Basket>()
                 tempSepetListesi = arrayListOf()
                 tempSepetListesi.clear()
-
-                var yemek_total_fiyat = 0
 
                 try {
                     val jsonObj = JSONObject(responseOfUrl)
@@ -95,8 +87,6 @@ class BasketRemoteDataSource {
                         val yemek_fiyat = s.getInt("yemek_fiyat")
                         val yemek_siparis_adet = s.getInt("yemek_siparis_adet")
 
-                        yemek_total_fiyat += (yemek_fiyat) * (yemek_siparis_adet)
-
                         val yemek = Food(yemek_id, yemek_adi, yemek_resim_adi, yemek_fiyat)
                         val sepettekiler = Basket(yemek, yemek_siparis_adet)
 
@@ -108,14 +98,6 @@ class BasketRemoteDataSource {
                     flowChannel.sendBlocking(null)
                 }
 
-                if (tempSepetListesi.isEmpty()) {
-                    //totalPriceView.text = "Sepetinizde Ürün Bulunmamaktadır"
-                } else {
-                    //totalPriceView.text = "Genel Toplam: ${yemek_total_fiyat} \u20ba"
-                }
-                //SepetListesi = tempSepetListesi
-
-                //notifyDataSetChanged()
             }, Response.ErrorListener { flowChannel.sendBlocking(null) })
 
             Volley.newRequestQueue(context).add(requestToUrl)

@@ -61,6 +61,7 @@ class MenuViewModel : ViewModel() {
 
     private fun insertFoodsToRoomDB(context: Context, it: List<Food>) {
         viewModelScope.launch(Dispatchers.IO) {
+            _foodList.postValue(it)
             val dao = FoodDatabase(context).foodDao()
             dao.deleteAllFoods()
             val foodRoomList: ArrayList<FoodRoom> = arrayListOf()

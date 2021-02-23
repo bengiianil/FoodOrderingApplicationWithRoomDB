@@ -46,7 +46,9 @@ class MenuFragment : Fragment() {
         viewModel.foodList.observe(viewLifecycleOwner, Observer {
             if (it != null) {
                 binding.menuRecyclerView.setHasFixedSize(true)
-                binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
+                binding.menuRecyclerView.layoutManager = StaggeredGridLayoutManager(
+                    2,
+                    StaggeredGridLayoutManager.VERTICAL)
                 binding.menuRecyclerView.adapter =
                     MenuAdapter(
                         this.requireContext(),

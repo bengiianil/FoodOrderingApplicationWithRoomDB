@@ -21,7 +21,6 @@ class BasketFragment : Fragment() {
 
     private lateinit var binding: FragmentBasketBinding
     private lateinit var viewModel: BasketViewModel
-    var sumPrice = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_basket, container, false)
@@ -35,6 +34,8 @@ class BasketFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.foodsListFromBasket.observe(viewLifecycleOwner, Observer {
             if(it != null) {
+                var sumPrice = 0
+
                 binding.noProductInBasketText.visibility = View.INVISIBLE
                 binding.basketRecyclerView.visibility = View.VISIBLE
                 binding.basketRecyclerView.setHasFixedSize(true)

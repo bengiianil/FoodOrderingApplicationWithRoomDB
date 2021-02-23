@@ -11,7 +11,6 @@ abstract class FoodDatabase : RoomDatabase() {
 
     abstract fun foodDao() : FoodDao
 
-    //Singleton
     companion object {
         @Volatile private var instance : FoodDatabase? = null
 
@@ -24,7 +23,6 @@ abstract class FoodDatabase : RoomDatabase() {
         }
 
         private fun makeDatabase(context : Context) = Room.databaseBuilder(
-            context.applicationContext,FoodDatabase::class.java,"fooddatabase"
-        ).build()
+            context.applicationContext,FoodDatabase::class.java,"fooddatabase").build()
     }
 }
